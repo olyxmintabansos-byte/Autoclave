@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,12 +15,12 @@ body{
   display:flex;
   justify-content:center;
   align-items:center;
-  min-height:100vh; /* lebih aman dari overflow */
+  min-height:100vh;
   color:#e5e7eb;
   padding:10px;
 }
 
-/* 🔥 diperbesar */
+/* diperbesar */
 .container{
   width:340px;
   background:#111827;
@@ -29,7 +31,7 @@ body{
 
 h1{
   text-align:center;
-  font-size:20px; /* dari 5px → normal */
+  font-size:20px;
   margin-bottom:14px;
   color:#4ade80;
 }
@@ -90,3 +92,104 @@ hr{
 }
 </style>
 </head>
+
+<body>
+
+<div class="container">
+<h1>Autoclave Mini</h1>
+
+<label>Jumlah Tools</label>
+<input type="number" id="tools" value="1000">
+
+<label>Harga Tools / WL</label>
+<input type="number" id="rate" value="5">
+
+<label>Stitches</label>
+<input type="number" id="stitch" value="3" step="0.01">
+
+<label>Sponge</label>
+<input type="number" id="sponge" value="4">
+
+<label>Antibiotic</label>
+<input type="number" id="anti" value="3">
+
+<label>Scalpel</label>
+<input type="number" id="scalpel" value="4">
+
+<button class="btn-main" onclick="autoOnce()">Sekali</button>
+<button class="btn-blue" onclick="autoLoop()">Loop</button>
+
+<div class="result" id="hasil"></div>
+</div>
+
+<script>
+function f(x){
+  return Number(x).toLocaleString("id-ID",{maximumFractionDigits:2});
+}
+
+function hitung(drone,toolsLeft,data){
+  let modal = data.tools / data.rate;
+
+  let valSt = drone * data.stitch;
+  let valSp = drone / data.sponge;
+  let valAn = drone / data.anti;
+  let valSc = drone / data.scalpel;
+
+  let sisaToolsWL = toolsLeft / data.rate;
+  let total = valSt + valSp + valAn + valSc + sisaToolsWL;
+  let profit = total - modal;
+  let cls = profit>=0 ? "profit":"loss";
+
+  hasil.innerHTML=`
+  <div class="stat"><span>Stitches</span><b>${f(valSt)}</b></div>
+  <div class="stat"><span>Sponge</span><b>${f(valSp)}</b></div>
+  <div class="stat"><span>Antibiotic</span><b>${f(valAn)}</b></div>
+  <div class="stat"><span>Scalpel</span><b>${f(valSc)}</b></div>
+  <div class="stat"><span>Sisa</span><b>${f(sisaToolsWL)}</b></div>
+  <hr>
+  <div class="stat"><span>Modal</span><b>${f(modal)}</b></div>
+  <div class="stat"><span>Total</span><b>${f(total)}</b></div>
+  <div class="stat ${cls}">
+    <span>${profit>=0?"PROFIT":"RUGI"}</span>
+    <b>${f(profit)}</b>
+  </div>
+  `;
+}
+
+function autoOnce(){
+  let data = ambil();
+  let act = Math.floor(data.tools/20);
+  let sisa = data.tools%20;
+  let back = act * 8;
+  hitung(act, sisa+back, data);
+}
+
+function autoLoop(){
+  let data = ambil();
+  let tools = data.tools;
+  let act=0;
+
+  while(tools>=20){
+    let n = Math.floor(tools/20);
+    let s = tools%20;
+    act += n;
+    tools = s + (n*8);
+  }
+
+  hitung(act, tools, data);
+}
+
+function ambil(){
+  return{
+    tools:Number(tools.value),
+    rate:Number(rate.value),
+    stitch:Number(stitch.value),
+    sponge:Number(sponge.value),
+    anti:Number(anti.value),
+    scalpel:Number(scalpel.value)
+  }
+}
+</script>
+
+</body>
+</html>
