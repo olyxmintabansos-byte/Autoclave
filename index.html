@@ -18,26 +18,20 @@ body{
   min-height:100vh;
   color:#e5e7eb;
   padding:12px;
-  transform:scale(.9);
-  transform-origin:center;
-}
-
-@media (max-width:480px){
-  body{transform:scale(1);}
 }
 
 .container{
-  width:280px;
-  max-width:90vw;
+  width:420px; /* 🔥 lebih lebar */
+  max-width:95vw;
   background:#111827;
-  padding:12px;
+  padding:14px;
   border-radius:16px;
   box-shadow:0 10px 25px rgba(0,0,0,0.5);
 }
 
 h1{
   text-align:center;
-  font-size:16px;
+  font-size:18px;
   margin-bottom:12px;
   color:#4ade80;
 }
@@ -48,12 +42,23 @@ input{
   width:100%;
   padding:7px;
   margin-top:3px;
-  margin-bottom:7px;
   border-radius:7px;
   border:none;
   background:#0f172a;
   color:white;
   font-size:12px;
+}
+
+/* 🔥 grid 2 kolom */
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:8px;
+}
+
+.full{
+  grid-column:1/-1;
 }
 
 button{
@@ -93,6 +98,11 @@ hr{
   background:#1f2937;
   margin:7px 0;
 }
+
+/* 📱 HP balik 1 kolom */
+@media (max-width:420px){
+  .grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 
@@ -101,26 +111,44 @@ hr{
 <div class="container">
 <h1>Autoclave Mini</h1>
 
+<div class="grid">
+
+<div class="full">
 <label>Jumlah Tools</label>
 <input type="number" id="tools" value="1000">
+</div>
 
+<div class="full">
 <label>Harga Tools / WL</label>
 <input type="number" id="rate" value="5">
+</div>
 
+<div>
 <label>Stitches</label>
 <input type="number" id="stitch" value="3" step="0.01">
+</div>
 
+<div>
 <label>Sponge</label>
 <input type="number" id="sponge" value="4">
+</div>
 
+<div>
 <label>Antibiotic</label>
 <input type="number" id="anti" value="3">
+</div>
 
+<div>
 <label>Scalpel</label>
 <input type="number" id="scalpel" value="4">
+</div>
 
+<div class="full">
 <button class="btn-main" onclick="autoOnce()">Sekali</button>
 <button class="btn-blue" onclick="autoLoop()">Loop</button>
+</div>
+
+</div>
 
 <div class="result" id="hasil"></div>
 </div>
