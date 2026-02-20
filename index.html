@@ -17,49 +17,52 @@ body{
   align-items:center;
   min-height:100vh;
   color:#e5e7eb;
-  padding:10px;
+  padding:12px;
+  transform:scale(.9);
+  transform-origin:center;
 }
 
-/* diperbesar */
+@media (max-width:480px){
+  body{transform:scale(1);}
+}
+
 .container{
-  width:340px;
+  width:280px;
+  max-width:90vw;
   background:#111827;
-  padding:14px;
-  border-radius:18px;
+  padding:12px;
+  border-radius:16px;
   box-shadow:0 10px 25px rgba(0,0,0,0.5);
 }
 
 h1{
   text-align:center;
-  font-size:20px;
-  margin-bottom:14px;
+  font-size:16px;
+  margin-bottom:12px;
   color:#4ade80;
 }
 
-label{
-  font-size:13px;
-  opacity:.7;
-}
+label{font-size:12px;opacity:.7;}
 
 input{
   width:100%;
-  padding:8px;
-  margin-top:4px;
-  margin-bottom:8px;
-  border-radius:8px;
+  padding:7px;
+  margin-top:3px;
+  margin-bottom:7px;
+  border-radius:7px;
   border:none;
   background:#0f172a;
   color:white;
-  font-size:13px;
+  font-size:12px;
 }
 
 button{
   width:100%;
-  padding:10px;
-  margin-top:8px;
+  padding:9px;
+  margin-top:7px;
   border:none;
-  border-radius:10px;
-  font-size:13px;
+  border-radius:9px;
+  font-size:12px;
   font-weight:600;
   cursor:pointer;
 }
@@ -68,11 +71,11 @@ button{
 .btn-blue{background:#3b82f6;color:white}
 
 .result{
-  margin-top:12px;
+  margin-top:10px;
   background:#0f172a;
-  padding:10px;
-  border-radius:10px;
-  font-size:13px;
+  padding:9px;
+  border-radius:9px;
+  font-size:12px;
 }
 
 .stat{
@@ -88,7 +91,7 @@ hr{
   border:none;
   height:1px;
   background:#1f2937;
-  margin:8px 0;
+  margin:7px 0;
 }
 </style>
 </head>
