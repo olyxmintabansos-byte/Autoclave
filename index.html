@@ -1,226 +1,322 @@
-<!DOCTYPE html>
-<html lang="id">
+﻿<!DOCTYPE html>
+<html lang="id" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Autoclave Mini</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:'Inter',sans-serif;
-  background:#0f172a;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  min-height:100vh;
-  color:#e5e7eb;
-  padding:12px;
-}
-
-.container{
-  width:420px; /* 🔥 lebih lebar */
-  max-width:95vw;
-  background:#111827;
-  padding:14px;
-  border-radius:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.5);
-}
-
-h1{
-  text-align:center;
-  font-size:18px;
-  margin-bottom:12px;
-  color:#4ade80;
-}
-
-label{font-size:12px;opacity:.7;}
-
-input{
-  width:100%;
-  padding:7px;
-  margin-top:3px;
-  border-radius:7px;
-  border:none;
-  background:#0f172a;
-  color:white;
-  font-size:12px;
-}
-
-/* 🔥 grid 2 kolom */
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:8px;
-}
-
-.full{
-  grid-column:1/-1;
-}
-
-button{
-  width:100%;
-  padding:9px;
-  margin-top:7px;
-  border:none;
-  border-radius:9px;
-  font-size:12px;
-  font-weight:600;
-  cursor:pointer;
-}
-
-.btn-main{background:#4ade80;color:black}
-.btn-blue{background:#3b82f6;color:white}
-
-.result{
-  margin-top:10px;
-  background:#0f172a;
-  padding:9px;
-  border-radius:9px;
-  font-size:12px;
-}
-
-.stat{
-  display:flex;
-  justify-content:space-between;
-  margin:3px 0;
-}
-
-.profit{color:#4ade80;font-weight:600}
-.loss{color:#f87171;font-weight:600}
-
-hr{
-  border:none;
-  height:1px;
-  background:#1f2937;
-  margin:7px 0;
-}
-
-/* 📱 HP balik 1 kolom */
-@media (max-width:420px){
-  .grid{grid-template-columns:1fr;}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Autoclave Pro — Growtopia Surgery Tool Sterilizer by Olyx</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    body { font-family: 'Space Grotesk', sans-serif; }
+    .mono { font-family: 'Space Mono', monospace; }
+  </style>
 </head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center selection:bg-emerald-600 selection:text-white pb-12">
 
-<body>
-
-<div class="container">
-<h1>Autoclave Mini</h1>
-
-<div class="grid">
-
-<div class="full">
-<label>Jumlah Tools</label>
-<input type="number" id="tools" value="1000">
-</div>
-
-<div class="full">
-<label>Harga Tools / WL</label>
-<input type="number" id="rate" value="5">
-</div>
-
-<div>
-<label>Stitches</label>
-<input type="number" id="stitch" value="3" step="0.01">
-</div>
-
-<div>
-<label>Sponge</label>
-<input type="number" id="sponge" value="4">
-</div>
-
-<div>
-<label>Antibiotic</label>
-<input type="number" id="anti" value="3">
-</div>
-
-<div>
-<label>Scalpel</label>
-<input type="number" id="scalpel" value="4">
-</div>
-
-<div class="full">
-<button class="btn-main" onclick="autoOnce()">Sekali</button>
-<button class="btn-blue" onclick="autoLoop()">Loop</button>
-</div>
-
-</div>
-
-<div class="result" id="hasil"></div>
-</div>
-
-<script>
-function f(x){
-  return Number(x).toLocaleString("id-ID",{maximumFractionDigits:2});
-}
-
-function hitung(drone,toolsLeft,data){
-  let modal = data.tools / data.rate;
-
-  let valSt = drone * data.stitch;
-  let valSp = drone / data.sponge;
-  let valAn = drone / data.anti;
-  let valSc = drone / data.scalpel;
-
-  let sisaToolsWL = toolsLeft / data.rate;
-  let total = valSt + valSp + valAn + valSc + sisaToolsWL;
-  let profit = total - modal;
-  let cls = profit>=0 ? "profit":"loss";
-
-  hasil.innerHTML=`
-  <div class="stat"><span>Stitches</span><b>${f(valSt)}</b></div>
-  <div class="stat"><span>Sponge</span><b>${f(valSp)}</b></div>
-  <div class="stat"><span>Antibiotic</span><b>${f(valAn)}</b></div>
-  <div class="stat"><span>Scalpel</span><b>${f(valSc)}</b></div>
-  <div class="stat"><span>Sisa</span><b>${f(sisaToolsWL)}</b></div>
-  <hr>
-  <div class="stat"><span>Modal</span><b>${f(modal)}</b></div>
-  <div class="stat"><span>Total</span><b>${f(total)}</b></div>
-  <div class="stat ${cls}">
-    <span>${profit>=0?"PROFIT":"RUGI"}</span>
-    <b>${f(profit)}</b>
+  <!-- Glow effect -->
+  <div class="fixed inset-0 pointer-events-none opacity-20">
+    <div class="absolute -top-40 -right-40 w-96 h-96 bg-emerald-600 rounded-full blur-[120px]"></div>
+    <div class="absolute top-1/2 -left-40 w-96 h-96 bg-cyan-600 rounded-full blur-[120px]"></div>
   </div>
-  `;
-}
 
-function autoOnce(){
-  let data = ambil();
-  let act = Math.floor(data.tools/20);
-  let sisa = data.tools%20;
-  let back = act * 8;
-  hitung(act, sisa+back, data);
-}
+  <!-- Header -->
+  <header class="w-full border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/25">
+          <i data-lucide="cross" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-slate-200 to-emerald-300 bg-clip-text text-transparent">Autoclave Pro</span>
+          <span class="text-[10px] px-2 py-0.5 ml-1.5 font-medium rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Surgery Suite by Olyx</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/olyxmintabansos-byte/Autoclave" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 flex items-center gap-1.5 transition-colors">
+          <i data-lucide="github" class="w-3.5 h-3.5"></i> Repo
+        </a>
+      </div>
+    </div>
+  </header>
 
-function autoLoop(){
-  let data = ambil();
-  let tools = data.tools;
-  let act=0;
+  <!-- Main Container -->
+  <main class="w-full max-w-4xl px-4 py-8 relative z-10 flex flex-col gap-6">
 
-  while(tools>=20){
-    let n = Math.floor(tools/20);
-    let s = tools%20;
-    act += n;
-    tools = s + (n*8);
-  }
+    <!-- Title -->
+    <div>
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+        Kalkulator Sterilisasi <span class="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Autoclave GT</span>
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-400 mt-1">
+        Hitung kalkulasi daur ulang surgical tools, estimasi drop item operasi, modal, dan laba bersih (WL/DL).
+      </p>
+    </div>
 
-  hitung(act, tools, data);
-}
+    <!-- Main Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-function ambil(){
-  return{
-    tools:Number(tools.value),
-    rate:Number(rate.value),
-    stitch:Number(stitch.value),
-    sponge:Number(sponge.value),
-    anti:Number(anti.value),
-    scalpel:Number(scalpel.value)
-  }
-}
-</script>
+      <!-- Left Column: Input Settings -->
+      <div class="lg:col-span-5 flex flex-col gap-4">
+        
+        <!-- Tools & Cost Card -->
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl space-y-4">
+          <div class="flex items-center gap-2 border-b border-slate-800 pb-3">
+            <i data-lucide="wrench" class="w-4 h-4 text-emerald-400"></i>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">Modal Surgical Tools</h2>
+          </div>
 
+          <div>
+            <label class="text-[11px] font-semibold text-slate-400 block mb-1">Jumlah Tools Kotor (Dirty Tools):</label>
+            <input type="number" id="toolsInput" value="1000" min="20" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm font-bold text-white mono focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <div>
+            <label class="text-[11px] font-semibold text-slate-400 block mb-1">Harga Beli Tools (Tools per 1 WL):</label>
+            <input type="number" id="rateInput" value="5" step="0.1" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm font-bold text-white mono focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <!-- Buttons -->
+          <div class="grid grid-cols-2 gap-2 pt-2">
+            <button onclick="calculateOnce()" class="py-3 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="play" class="w-3.5 h-3.5"></i> 1x Siklus
+            </button>
+            <button onclick="calculateLoop()" class="py-3 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-1.5">
+              <i data-lucide="repeat" class="w-3.5 h-3.5"></i> Loop Habis
+            </button>
+          </div>
+        </div>
+
+        <!-- Surgery Market Rate Presets -->
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-5 backdrop-blur-md shadow-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center gap-2">
+              <i data-lucide="tag" class="w-4 h-4 text-emerald-400"></i>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">Harga Pasar Item (WL)</h2>
+            </div>
+            <button onclick="resetDefaultRates()" class="text-[10px] text-emerald-400 hover:underline">Reset Default</button>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Stitches (WL/item)</label>
+              <input type="number" id="stitchRate" value="3" step="0.05" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white mono">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Sponge (item/WL)</label>
+              <input type="number" id="spongeRate" value="4" step="0.1" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white mono">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Antibiotic (item/WL)</label>
+              <input type="number" id="antiRate" value="3" step="0.1" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white mono">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Scalpel (item/WL)</label>
+              <input type="number" id="scalpelRate" value="4" step="0.1" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-lg text-white mono">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Result Summary Card -->
+      <div class="lg:col-span-7 bg-slate-900/70 border border-slate-800 rounded-2xl p-5 sm:p-6 backdrop-blur-md shadow-xl flex flex-col justify-between">
+        
+        <div>
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="bar-chart-3" class="w-4 h-4 text-emerald-400"></i>
+              <h2 class="text-xs font-bold uppercase tracking-wider text-slate-300">Hasil Analisis & Keuntungan</h2>
+            </div>
+            <span id="modeBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Loop Sampai Habis</span>
+          </div>
+
+          <!-- Quick Stat Cards -->
+          <div class="grid grid-cols-3 gap-3 mb-6">
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Total Siklus</span>
+              <span id="statCycles" class="text-lg font-bold text-white mono">0</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Modal Awal</span>
+              <span id="statModal" class="text-lg font-bold text-slate-300 mono">0 WL</span>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 text-center">
+              <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Sisa Tools</span>
+              <span id="statLeftover" class="text-lg font-bold text-white mono">0</span>
+            </div>
+          </div>
+
+          <!-- Items Breakdown -->
+          <div class="space-y-2 mb-6">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400 block mb-2">Item yang Diperoleh:</span>
+            
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
+              <span class="text-slate-300 flex items-center gap-2">🧵 Stitches</span>
+              <span id="resStitches" class="font-bold text-emerald-400 mono">0 = 0 WL</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
+              <span class="text-slate-300 flex items-center gap-2">🧽 Sponge</span>
+              <span id="resSponge" class="font-bold text-emerald-400 mono">0 = 0 WL</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
+              <span class="text-slate-300 flex items-center gap-2">💊 Antibiotic</span>
+              <span id="resAnti" class="font-bold text-emerald-400 mono">0 = 0 WL</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
+              <span class="text-slate-300 flex items-center gap-2">🔪 Scalpel</span>
+              <span id="resScalpel" class="font-bold text-emerald-400 mono">0 = 0 WL</span>
+            </div>
+            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/40 border border-slate-800/80 text-xs">
+              <span class="text-slate-300 flex items-center gap-2">📦 Nilai Sisa Tools</span>
+              <span id="resSisaWL" class="font-bold text-slate-300 mono">0 WL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profit Banner -->
+        <div id="profitBanner" class="p-4 rounded-xl border border-emerald-500/40 bg-emerald-950/20 flex items-center justify-between">
+          <div>
+            <span id="profitStatusText" class="text-xs font-bold uppercase tracking-wider text-emerald-400 block">PROFIT BERSIH</span>
+            <div id="profitWL" class="text-2xl font-extrabold text-white mono">+0 WL</div>
+            <span id="profitDL" class="text-[11px] text-slate-400 mono">(0 DL)</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Estimasi ROI</span>
+            <div id="roiPercent" class="text-xl font-bold text-emerald-400 mono">+0%</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800/80 py-6 text-center text-xs text-slate-500 w-full">
+    <p>© 2026 Olyx • Surgery Autoclave Simulator Suite • All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    function fmt(n) {
+      return Number(n).toLocaleString('id-ID', { maximumFractionDigits: 2 });
+    }
+
+    function resetDefaultRates() {
+      document.getElementById('stitchRate').value = '3';
+      document.getElementById('spongeRate').value = '4';
+      document.getElementById('antiRate').value = '3';
+      document.getElementById('scalpelRate').value = '4';
+      calculateLoop();
+    }
+
+    function getInputs() {
+      return {
+        tools: parseFloat(document.getElementById('toolsInput').value) || 0,
+        rate: parseFloat(document.getElementById('rateInput').value) || 1,
+        stitch: parseFloat(document.getElementById('stitchRate').value) || 0,
+        sponge: parseFloat(document.getElementById('spongeRate').value) || 1,
+        anti: parseFloat(document.getElementById('antiRate').value) || 1,
+        scalpel: parseFloat(document.getElementById('scalpelRate').value) || 1,
+      };
+    }
+
+    function renderOutput(cycles, toolsLeft, data, modeName) {
+      document.getElementById('modeBadge').textContent = modeName;
+      document.getElementById('statCycles').textContent = fmt(cycles);
+      document.getElementById('statLeftover').textContent = fmt(toolsLeft);
+
+      const modalWL = data.tools / data.rate;
+      document.getElementById('statModal').textContent = `${fmt(modalWL)} WL`;
+
+      const valSt = cycles * data.stitch;
+      const valSp = cycles / data.sponge;
+      const valAn = cycles / data.anti;
+      const valSc = cycles / data.scalpel;
+      const valSisa = toolsLeft / data.rate;
+
+      document.getElementById('resStitches').textContent = `${fmt(cycles)} pcs = ${fmt(valSt)} WL`;
+      document.getElementById('resSponge').textContent = `${fmt(cycles)} pcs = ${fmt(valSp)} WL`;
+      document.getElementById('resAnti').textContent = `${fmt(cycles)} pcs = ${fmt(valAn)} WL`;
+      document.getElementById('resScalpel').textContent = `${fmt(cycles)} pcs = ${fmt(valSc)} WL`;
+      document.getElementById('resSisaWL').textContent = `${fmt(valSisa)} WL`;
+
+      const totalRevenue = valSt + valSp + valAn + valSc + valSisa;
+      const netProfit = totalRevenue - modalWL;
+      const roi = modalWL > 0 ? (netProfit / modalWL) * 100 : 0;
+      const dl = (netProfit / 100).toFixed(2);
+
+      const banner = document.getElementById('profitBanner');
+      const statusText = document.getElementById('profitStatusText');
+      const profitWLEl = document.getElementById('profitWL');
+      const profitDLEl = document.getElementById('profitDL');
+      const roiEl = document.getElementById('roiPercent');
+
+      if (netProfit >= 0) {
+        banner.className = 'p-4 rounded-xl border border-emerald-500/40 bg-emerald-950/20 flex items-center justify-between';
+        statusText.textContent = 'PROFIT BERSIH';
+        statusText.className = 'text-xs font-bold uppercase tracking-wider text-emerald-400 block';
+        profitWLEl.textContent = `+${fmt(netProfit)} WL`;
+        profitWLEl.className = 'text-2xl font-extrabold text-emerald-300 mono';
+        profitDLEl.textContent = `(setara ~ ${dl} Diamond Lock)`;
+        roiEl.textContent = `+${fmt(roi)}%`;
+        roiEl.className = 'text-xl font-bold text-emerald-400 mono';
+      } else {
+        banner.className = 'p-4 rounded-xl border border-rose-500/40 bg-rose-950/20 flex items-center justify-between';
+        statusText.textContent = 'POTENSI RUGI';
+        statusText.className = 'text-xs font-bold uppercase tracking-wider text-rose-400 block';
+        profitWLEl.textContent = `${fmt(netProfit)} WL`;
+        profitWLEl.className = 'text-2xl font-extrabold text-rose-300 mono';
+        profitDLEl.textContent = `(kurang ${Math.abs(dl)} DL)`;
+        roiEl.textContent = `${fmt(roi)}%`;
+        roiEl.className = 'text-xl font-bold text-rose-400 mono';
+      }
+    }
+
+    function calculateOnce() {
+      const data = getInputs();
+      if (data.tools < 20) return alert('Jumlah tools minimal 20 untuk 1x siklus autoclave!');
+      const cycles = Math.floor(data.tools / 20);
+      const leftover = data.tools % 20;
+      const recycledBack = cycles * 8;
+      renderOutput(cycles, leftover + recycledBack, data, '1x Siklus Autoclave');
+    }
+
+    function calculateLoop() {
+      const data = getInputs();
+      let currentTools = data.tools;
+      let totalCycles = 0;
+
+      while (currentTools >= 20) {
+        const c = Math.floor(currentTools / 20);
+        const rem = currentTools % 20;
+        totalCycles += c;
+        currentTools = rem + (c * 8);
+      }
+
+      renderOutput(totalCycles, currentTools, data, 'Loop Sampai Habis');
+    }
+
+    // Initialize
+    calculateLoop();
+    if (window.lucide) lucide.createIcons();
+  </script>
 </body>
 </html>
